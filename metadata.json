@@ -1,0 +1,19 @@
+{
+    "KPackageStructure": "Plasma/Wallpaper",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Yusuf Ipek"
+            }
+        ],
+        "Category": "",
+        "Description": "Animated neon skyline that reacts to CPU, RAM, disk, network and GPU load and CPU temperature",
+        "Icon": "preferences-desktop-wallpaper",
+        "Id": "me.yusufipek.neoncity",
+        "License": "MIT",
+        "Name": "Neon City",
+        "Version": "0.1"
+    },
+    "X-KDE-ParentApp": "org.kde.plasmashell",
+    "X-Plasma-API-Minimum-Version": "6.0"
+}
