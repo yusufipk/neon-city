@@ -6,6 +6,9 @@ Kirigami.FormLayout {
     id: root
 
     property string cfg_Theme
+    // Plasma sets these on every wallpaper config page; declaring them avoids load warnings.
+    property var configDialog
+    property var wallpaperConfiguration
 
     QQC2.ComboBox {
         Kirigami.FormData.label: "Style:"
