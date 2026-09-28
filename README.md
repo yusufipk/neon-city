@@ -22,4 +22,4 @@ Plasma keeps the old version loaded after an update until `systemctl --user rest
 
 Preview in a browser without Plasma: serve `contents/ui` over HTTP and open `city.html?demo=1` (keys 1 to 8 fire events). Remove with `kpackagetool6 -t Plasma/Wallpaper -r me.yusufipek.neoncity`.
 
-It redraws at 30 fps even when covered by windows, about 5% of one CPU core here; append `&fps=20` to the page URL in `main.qml` to lower that. The Bebop look is an unofficial fan homage, not affiliated with the show or its rights holders.
+It redraws at 30 fps even when covered by windows. On an i5-12400F that costs about 20% of one CPU core (renderer plus the Plasma shell copying its frames) and about 190 MB of RAM, with no measurable GPU load; append `&fps=20` to the page URL in `main.qml` to lower that. The Bebop look is an unofficial fan homage, not affiliated with the show or its rights holders.

@@ -41,7 +41,6 @@ let flyers = [], cars = [], trains = [], drops = [], pulses = [], flickers = [],
 let lanes = [], streetLanes = [];
 let t = 0;
 let nextEventAt = FORCE_DEMO ? 12 : rand(30, 60);
-let eventLabel = null;
 const EVENT_WINDOW = 1800;
 let eventQueue = [], eventWindowEnd = 0;
 let lightPhase = 0, lightLevel = 0;
@@ -74,10 +73,10 @@ const THEMES = {
     boardFont: '700 {px}px "JetBrains Mono", "DejaVu Sans Mono", monospace',
     mono: '"JetBrains Mono", "DejaVu Sans Mono", monospace',
     hud: 'rgba(180,245,255,0.75)', hudGlow: '#00e5ff',
-    scanlines: true, grain: false, titleCards: false,
+    scanlines: true, grain: false,
   },
   // Homage to the Cowboy Bebop look: Mars dusk, amber and teal, jazz-poster serifs,
-  // Hong Kong street signs, the shattered moon and "SESSION" title cards.
+  // Hong Kong street signs and the shattered moon.
   bebop: {
     neon: ['#ff4a3d', '#ffb347', '#3fd0c9', '#f4e3c1', '#e8742f', '#ff6f61'],
     win: ['#ffcf7a', '#ffb45c', '#ffe2a8', '#f7a24b', '#ffd88f', '#ffc46b', '#bfe8dc'],
@@ -104,18 +103,13 @@ const THEMES = {
     boardFont: 'italic 700 {px}px "C059", "DejaVu Serif", serif',
     mono: '"Nimbus Mono PS", "Liberation Mono", monospace',
     hud: 'rgba(255,228,190,0.8)', hudGlow: '#ff8a3d',
-    scanlines: false, grain: true, titleCards: true,
-    titles: {
-      'POLICE CHASE': 'HIGHWAY CHASE BLUES', METEOR: 'FALLING STAR WALTZ', FIREWORKS: 'FIREWORKS BALLAD',
-      LIGHTNING: 'THUNDER SESSION', BLACKOUT: 'LIGHTS OUT RHAPSODY', BLIMP: 'SLOW BOAT SWING',
-      UFO: 'CLOSE ENCOUNTER JAM', GLITCH: 'BROKEN RECORD BOOGIE',
-    },
+    scanlines: false, grain: true,
   },
 };
 const TH = Object.hasOwn(THEMES, params.get('theme') || '') ? THEMES[params.get('theme')] : THEMES.bebop;
 const NEON = TH.neon, WIN = TH.win, SIGN_WORDS = TH.signs, ADS = TH.ads;
 function font(tpl, px) { return tpl.replace('{px}', Math.round(px)); }
-let moonShape = null, grainFrames = [], session = randi(1, 26);
+let moonShape = null, grainFrames = [];
 
 // ---------------------------------------------------------------- utils
 
@@ -960,28 +954,6 @@ function fireEvent(fn) {
   const e = fn();
   if (e.skip) return;
   events.push(e);
-  eventLabel = { text: e.label, start: t, until: t + (TH.titleCards ? 7 : 5), session: session++ };
-}
-
-// Bebop-style episode card: small "SESSION #NN" over a big serif title on a black plate.
-function drawTitleCard() {
-  if (!TH.titleCards || !eventLabel || eventLabel.until <= t) return;
-  const a = clamp(Math.min((t - eventLabel.start) * 1.5, eventLabel.until - t), 0, 1);
-  const title = (TH.titles && TH.titles[eventLabel.text]) || eventLabel.text;
-  const x = 40 * S, y = 56 * S, pad = 18 * S;
-  ctx.font = font('700 {px}px "C059", "DejaVu Serif", serif', 34 * S);
-  const w = ctx.measureText(title).width + pad * 2;
-  ctx.globalAlpha = a;
-  ctx.fillStyle = 'rgba(0,0,0,0.88)';
-  ctx.fillRect(x, y, w, 86 * S);
-  ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-  ctx.fillStyle = '#f4e3c1';
-  ctx.font = font('italic 400 {px}px "C059", "DejaVu Serif", serif', 15 * S);
-  ctx.fillText(`SESSION #${String(eventLabel.session).padStart(2, '0')}`, x + pad, y + 14 * S);
-  ctx.fillStyle = '#ffffff';
-  ctx.font = font('700 {px}px "C059", "DejaVu Serif", serif', 34 * S);
-  ctx.fillText(title, x + pad, y + 36 * S);
-  ctx.globalAlpha = 1;
 }
 
 // Event windows run on a monotonic clock, not on animation time, so a throttled page keeps
@@ -1286,11 +1258,6 @@ function drawHud() {
   ctx.shadowColor = TH.hudGlow; ctx.shadowBlur = 8 * S;
   ctx.fillStyle = TH.hud;
   for (const l of lines) { ctx.fillText(l, x, y); y += fs * 1.5; }
-  if (!TH.titleCards && eventLabel && eventLabel.until > t) {
-    ctx.shadowColor = '#ff2bd6';
-    ctx.fillStyle = `rgba(255,170,235,${clamp(eventLabel.until - t, 0, 1)})`;
-    ctx.fillText(`>> ${eventLabel.text}`, x, y + fs * 0.4);
-  }
   ctx.shadowBlur = 0;
 }
 
@@ -1316,7 +1283,6 @@ function build() {
   frontCache = makeCanvas(W, H);
   overlayCache = makeCanvas(W, H);
   flyers = []; cars = []; trains = []; drops = []; pulses = []; flickers = []; events = [];
-  eventLabel = null;
   if (TH.brokenMoon) moonShape = genMoon();
   genCity();
   renderSky(); renderFar(); renderCity(); renderFront(); renderOverlay();
@@ -1371,7 +1337,6 @@ function draw() {
     ctx.globalAlpha = 1;
     ctx.globalCompositeOperation = 'source-over';
   }
-  drawTitleCard();
   drawHud();
 }
 
