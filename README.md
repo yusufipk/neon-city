@@ -1,6 +1,8 @@
 # Neon City
 
-![Neon City in its Cowboy Bebop look](docs/screenshot.jpg)
+[![Neon City under a simulated compile load, click to play the video](docs/demo.jpg)](docs/demo.mp4)
+
+The [video](docs/demo.mp4) runs on scripted load, not a real machine: idle, a big download, a compile that maxes CPU and RAM, then gaming, then idle again with random events.
 
 A KDE Plasma 6 wallpaper: an animated skyline that reacts to what your machine is doing. It has a Cowboy Bebop look (the default) and a plain neon one, switchable in the wallpaper settings.
 
